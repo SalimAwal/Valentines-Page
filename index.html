@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine?</title>
+<style>
+    body {
+        font-family: 'Comic Sans MS', cursive;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+
+    .card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        width: 360px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    h1 { color: #ff4d6d; }
+
+    .buttons {
+        margin-top: 20px;
+        position: relative;
+        height: 120px;
+    }
+
+    button {
+        border: none;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    #yesBtn {
+        background: #ff4d6d;
+        color: white;
+        border-radius: 30px;
+        padding: 12px 20px;
+        width: 80px;
+        height: 50px;
+        font-size: 16px;
+        margin-right: 10px;
+        position: relative;
+    }
+
+    #noBtn {
+        background: #ccc;
+        color: black;
+        position: absolute;
+        font-size: 18px;
+        width: 220px;     
+        height: 80px;     
+        border-radius: 40px; 
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .popup.show {
+        display: flex;
+        opacity: 1;
+    }
+
+    .popup-content {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        animation: pop 0.5s ease;
+        width: 360px;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+</style>
+</head>
+<body>
+
+<!-- Main question card -->
+<div class="card" id="mainCard">
+    <h1 id="questionText">Will you be my Valentine, Vunti? 💖</h1>
+    <div class="buttons">
+        <button id="yesBtn">Yes 💕</button>
+        <button id="noBtn">No 🙄</button>
+    </div>
+</div>
+
+<!-- First special No popup card -->
+<div class="popup" id="noPopup">
+    <div class="popup-content">
+        <h1>Jiskeko hau. Sachikai no thichexa. Aba nathich hai tya. Let's try this again.</h1>
+    </div>
+</div>
+
+<!-- Final Valentine popup -->
+<div class="popup" id="finalPopup">
+    <div class="popup-content">
+        <h2>You did it! 😍💘</h2>
+        <p>You did it! Now you are stuck with me since always 😂. Happy Valentines my love ❤️, my princess 👸, my vunti 😍, my sigane 🤧, my kuchi puchi ku 🤗💘</p>
+    </div>
+</div>
+
+<script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const mainCard = document.getElementById("mainCard");
+    const noPopup = document.getElementById("noPopup");
+    const finalPopup = document.getElementById("finalPopup");
+
+    let noClicks = 0;
+
+    const reactions = [
+        "Are you sure? 😏","Think again 😌","Don’t be shy 😜","That button is dangerous 😳",
+        "Your finger slipped 😆","Wrong choice 😂","Plot twist: You like me ❤️","Nice try 😎",
+        "Still no? 🥲","I can do this all day 😏","Resistance is useless 😈",
+        "Just say yes already 😭","Your heart says yes 💓","This button lies 🤥","Last chance 😜",
+        "Hmm… maybe? 😅","Oops, try again 😝","You can do it! 😜","Keep pressing No 😂",
+        "I see your hand shaking 😏","No? Really? 😆","Sneaky No! 😎","Try harder 😛",
+        "Haha! Almost! 😜","Is No fun? 🤪","Tickle me! 😂","You like saying No? 😏",
+        "Noooo! 😝","Come on… 😅","I expected that 😎","Are you tired yet? 😆",
+        "Almost gave up? 😏","Try pressing Yes 🤭","No is funny, right? 😛"
+    ];
+
+    // First No click special popup
+    noBtn.addEventListener("click", () => {
+        noClicks++;
+
+        if (noClicks === 1) {
+            // Show special No popup
+            noPopup.classList.add("show");
+
+            // Hide after 5 seconds and restore main card
+            setTimeout(() => {
+                noPopup.classList.remove("show");
+                mainCard.style.display = "flex";
+            }, 5000);
+
+            // Hide main card while popup is shown
+            mainCard.style.display = "none";
+
+            return;
+        }
+
+        // Move No button randomly and change shape
+        const randomX = Math.floor(Math.random() * 200) - 100;
+        const randomY = Math.floor(Math.random() * 80) - 40;
+
+        const randomWidth = Math.floor(Math.random() * 120) + 100;
+        const randomHeight = Math.floor(Math.random() * 60) + 50;
+        const randomRadius = Math.floor(Math.random() * 50) + 10;
+        const randomColor = `hsl(${Math.floor(Math.random()*360)}, 70%, 80%)`;
+
+        noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        noBtn.style.width = `${randomWidth}px`;
+        noBtn.style.height = `${randomHeight}px`;
+        noBtn.style.borderRadius = `${randomRadius}px`;
+        noBtn.style.backgroundColor = randomColor;
+
+        // Show next reaction
+        noBtn.innerText = reactions[(noClicks-2) % reactions.length];
+
+        // Randomly move Yes button too to make it harder
+        const yesX = Math.floor(Math.random() * 100) - 50;
+        const yesY = Math.floor(Math.random() * 50) - 25;
+        yesBtn.style.transform = `translate(${yesX}px, ${yesY}px) scale(${1 + noClicks * 0.08})`;
+    });
+
+    // Show final Valentine message
+    yesBtn.addEventListener("click", () => {
+        finalPopup.style.display = "flex";
+    });
+</script>
+
+</body>
+</html>
