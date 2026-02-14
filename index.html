@@ -35,16 +35,30 @@
     transition: all 0.3s ease;
   }
 
-  #yesBtn {
+  #yesBtnSmall {
     background: #ff4d6d;
     color: white;
     border-radius: 30px;
-    padding: 12px 20px;
-    width: 80px;
-    height: 50px;
-    font-size: 16px;
-    margin-right: 10px;
-    position: relative;
+    padding: 10px 18px;
+    width: 40px;
+    height: 30px;
+    font-size: 14px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+
+  #yesBtnLarge {
+    background: #ff4d6d;
+    color: white;
+    border-radius: 30px;
+    padding: 20px;
+    position: absolute;
+    top: 0; left: 0;
+    width: 0;
+    height: 0;
+    opacity: 0.8;
+    z-index: 0;
   }
 
   #noBtn {
@@ -52,9 +66,9 @@
     color: black;
     position: absolute;
     font-size: 18px;
-    width: 220px;     
-    height: 80px;     
-    border-radius: 40px; 
+    width: 220px;
+    height: 80px;
+    border-radius: 40px;
   }
 
   .popup {
@@ -94,8 +108,9 @@
 <div class="card" id="mainCard">
   <h1 id="questionText">Will you be my Valentine, Vunti? 💖</h1>
   <div class="buttons">
-    <button id="yesBtn">Yes 💕</button>
     <button id="noBtn">No 🙄</button>
+    <button id="yesBtnSmall">Yes 💕</button>
+    <button id="yesBtnLarge"></button>
   </div>
 </div>
 
@@ -116,15 +131,17 @@
 
 <script>
 const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
+const yesBtnSmall = document.getElementById("yesBtnSmall");
+const yesBtnLarge = document.getElementById("yesBtnLarge");
 const mainCard = document.getElementById("mainCard");
+const questionText = document.getElementById("questionText");
 const noPopup = document.getElementById("noPopup");
 const finalPopup = document.getElementById("finalPopup");
 
 let noClicks = 0;
 
-// Custom No reactions sequence after first popup
-const customReactions = [
+// 17 original No reactions
+const originalNoReactions = [
   "Ajhai no thichyo yesle.",
   "Yes thichana vaneko.",
   "K khaixeuuuuuuuuuu. Kina no thichekooooooooo.",
@@ -141,28 +158,21 @@ const customReactions = [
   "da..",
   "hya yes thichna vaneko.",
   "Natra galama tokxu.",
-  // Add additional 10-15 funny/cute reactions
-  "No is my cardio 😂",
-  "Pressing No burns calories 😎",
-  "I like your persistence 😏",
-  "Oops! Try again 😝",
-  "Your finger is strong 💪",
-  "Still resisting? 😅",
-  "Nooooo! Almost! 😜",
-  "I see your strategy 🧐",
-  "Haha, clever! 😆",
-  "You can’t escape 💘",
-  "Keep trying! 😛",
-  "No button loves you too ❤️",
-  "Resistance is futile 😈",
-  "Nice try! 😎",
-  "No means maybe 😉"
+  "Chal, aba yes lai try gar 🤭"
+];
+
+// Final 4 No reactions exactly as requested
+const finalNoReactions = [
+  "Yes ta ali najik nai thiyo ta 😏",
+  "No thichne ho ki ramailo garne? 😂",
+  "Mero mutu yes thichana 💓",
+  "Last chance to click yes"
 ];
 
 noBtn.addEventListener("click", () => {
   noClicks++;
 
-  // First No click → popup
+  // First click → popup
   if (noClicks === 1) {
     mainCard.style.display = "none";
     noPopup.classList.add("show");
@@ -171,36 +181,60 @@ noBtn.addEventListener("click", () => {
       noPopup.classList.remove("show");
       mainCard.style.display = "flex";
     }, 5000);
-
     return;
   }
 
-  // Move No button randomly and change shape/color
-  const randomX = Math.floor(Math.random() * 200) - 100;
-  const randomY = Math.floor(Math.random() * 80) - 40;
-  const randomWidth = Math.floor(Math.random() * 120) + 100;
-  const randomHeight = Math.floor(Math.random() * 60) + 50;
-  const randomRadius = Math.floor(Math.random() * 50) + 10;
-  const randomColor = `hsl(${Math.floor(Math.random()*360)}, 70%, 80%)`;
+  // Determine reaction
+  let reaction;
+  if (noClicks <= 17) reaction = originalNoReactions[noClicks - 2];
+  else if (noClicks <= 21) reaction = finalNoReactions[noClicks - 18];
+  else reaction = "";
 
-  noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
-  noBtn.style.width = `${randomWidth}px`;
-  noBtn.style.height = `${randomHeight}px`;
-  noBtn.style.borderRadius = `${randomRadius}px`;
-  noBtn.style.backgroundColor = randomColor;
+  // Move/shrink No button gradually
+  const maxClicks = 22;
+  if (noClicks < maxClicks) {
+    const randomX = Math.floor(Math.random() * 200) - 100;
+    const randomY = Math.floor(Math.random() * 80) - 40;
+    const randomWidth = Math.max(50, 220 - noClicks*8);
+    const randomHeight = Math.max(40, 80 - noClicks*4);
+    const randomRadius = Math.floor(Math.random() * 50) + 10;
+    const randomColor = `hsl(${Math.floor(Math.random()*360)}, 70%, 80%)`;
+    noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    noBtn.style.width = `${randomWidth}px`;
+    noBtn.style.height = `${randomHeight}px`;
+    noBtn.style.borderRadius = `${randomRadius}px`;
+    noBtn.style.backgroundColor = randomColor;
+    noBtn.innerText = reaction;
+  }
 
-  // Show next custom reaction in sequence
-  const index = Math.min(noClicks - 2, customReactions.length - 1);
-  noBtn.innerText = customReactions[index];
+  // Gradually move question up after 4th click
+  if (noClicks >= 4 && noClicks <= maxClicks) {
+    questionText.style.transform = `translateY(-${Math.min((noClicks-3)*5,25)}px)`;
+  }
 
-  // Yes button moves/scales slightly to make it tricky
-  const yesX = Math.floor(Math.random() * 100) - 50;
-  const yesY = Math.floor(Math.random() * 50) - 25;
-  yesBtn.style.transform = `translate(${yesX}px, ${yesY}px) scale(${1 + noClicks * 0.08})`;
+  // Gradually grow large Yes button
+  const scale = 0.3 + noClicks*0.15;
+  yesBtnLarge.style.width = `${Math.min(scale*360, 360)}px`;
+  yesBtnLarge.style.height = `${Math.min(scale*200, 200)}px`;
+  yesBtnLarge.style.opacity = 0.8;
+  yesBtnLarge.style.zIndex = 0;
+
+  // On final No click, remove No button and make Yes buttons fully clickable
+  if (noClicks === 22) {
+    noBtn.style.display = "none";
+    yesBtnLarge.style.width = "360px";
+    yesBtnLarge.style.height = "200px";
+    yesBtnLarge.style.top = "0";
+    yesBtnLarge.style.left = "0";
+    yesBtnLarge.style.zIndex = 1;
+  }
 });
 
-// Yes button click → show final Valentine popup
-yesBtn.addEventListener("click", () => {
+// Click either Yes button → final popup
+yesBtnSmall.addEventListener("click", () => {
+  finalPopup.style.display = "flex";
+});
+yesBtnLarge.addEventListener("click", () => {
   finalPopup.style.display = "flex";
 });
 </script>
