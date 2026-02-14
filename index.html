@@ -13,28 +13,71 @@
         align-items: center;
         margin: 0;
     }
+
     .card {
         background: white;
         padding: 30px;
         border-radius: 20px;
         text-align: center;
         box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        width: 320px;
+        width: 360px;
     }
+
     h1 { color: #ff4d6d; }
     .buttons { margin-top: 20px; position: relative; height: 120px; }
+
     button {
-        border: none; border-radius: 30px; padding: 12px 20px;
-        font-size: 16px; cursor: pointer; transition: all 0.3s ease;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
     }
-    #yesBtn { background: #ff4d6d; color: white; margin-right: 10px; }
-    #noBtn { background: #ccc; color: black; position: absolute; width: 160px; }
-    .popup { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
-    .popup-content { background: white; padding: 30px; border-radius: 20px; text-align: center; animation: pop 0.5s ease; }
-    @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+    #yesBtn {
+        background: #ff4d6d;
+        color: white;
+        margin-right: 10px;
+        width: 80px;
+        height: 50px;
+    }
+
+    #noBtn {
+        background: #ccc;
+        color: black;
+        position: absolute;
+        width: 180px;
+        height: 70px;
+        font-size: 18px;
+        border-radius: 20px;
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
 </style>
 </head>
 <body>
+
 <div class="card">
     <h1>Will you be my Valentine, Vunti? 💖</h1>
     <div class="buttons">
@@ -42,17 +85,20 @@
         <button id="noBtn">No 🙄</button>
     </div>
 </div>
+
 <div class="popup" id="popup">
     <div class="popup-content">
-        <h2>Yayyyy!!! 😍💘</h2>
-        <p>You just made my Valentine’s Day extra special 💝</p>
-        <p>Now you’re stuck with me 😜</p>
+        <h2>You did it! 😍💘</h2>
+        <p>You did it! Now you are stuck with me since always 😂. Happy Valentines my love ❤️, my princess 👸, my vunti 😍, my sigane 🤧, my kuchi puchi ku 🤗💘</p>
     </div>
 </div>
+
 <script>
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
     const popup = document.getElementById("popup");
+
+    let noClicks = 0;
 
     const reactions = [
         "Are you sure? 😏","Think again 😌","Don’t be shy 😜","That button is dangerous 😳",
@@ -61,18 +107,35 @@
         "Just say yes already 😭","Your heart says yes 💓","This button lies 🤥","Last chance 😜"
     ];
 
-    let noClicks = 0;
+    noBtn.innerText = "Try clicking No"; // initial No text
 
     noBtn.addEventListener("click", () => {
         noClicks++;
+
+        // First click special reaction
+        if (noClicks === 1) {
+            noBtn.innerText = "Jiskeko hau. No thichni hoina tya";
+            noBtn.style.width = "160px";
+            noBtn.style.height = "60px";
+            return;
+        }
+
+        // Random movement and shrinking effect
         const randomX = Math.floor(Math.random() * 200) - 100;
         const randomY = Math.floor(Math.random() * 80) - 40;
         noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(${Math.max(0.6, 1 - noClicks * 0.05)})`;
-        noBtn.innerText = reactions[noClicks % reactions.length];
+
+        // Next reaction
+        noBtn.innerText = reactions[(noClicks-2) % reactions.length];
+
+        // Yes button grows
         yesBtn.style.transform = `scale(${1 + noClicks * 0.08})`;
     });
 
-    yesBtn.addEventListener("click", () => { popup.style.display = "flex"; });
+    yesBtn.addEventListener("click", () => {
+        popup.style.display = "flex";
+    });
 </script>
+
 </body>
 </html>
