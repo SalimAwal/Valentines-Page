@@ -28,9 +28,7 @@
 
     button {
         border: none;
-        border-radius: 30px;
-        padding: 12px 20px;
-        font-size: 16px;
+        font-family: inherit;
         cursor: pointer;
         transition: all 0.3s ease;
     }
@@ -38,19 +36,22 @@
     #yesBtn {
         background: #ff4d6d;
         color: white;
-        margin-right: 10px;
+        border-radius: 30px;
+        padding: 12px 20px;
         width: 80px;
         height: 50px;
+        font-size: 16px;
+        margin-right: 10px;
     }
 
     #noBtn {
         background: #ccc;
         color: black;
         position: absolute;
-        width: 180px;
-        height: 70px;
         font-size: 18px;
-        border-radius: 20px;
+        width: 220px;      /* very big initially */
+        height: 80px;      /* very big initially */
+        border-radius: 40px; /* round shape */
     }
 
     .popup {
@@ -82,7 +83,7 @@
     <h1>Will you be my Valentine, Vunti? 💖</h1>
     <div class="buttons">
         <button id="yesBtn">Yes 💕</button>
-        <button id="noBtn">No 🙄</button>
+        <button id="noBtn">Try clicking No</button>
     </div>
 </div>
 
@@ -107,25 +108,32 @@
         "Just say yes already 😭","Your heart says yes 💓","This button lies 🤥","Last chance 😜"
     ];
 
-    noBtn.innerText = "Try clicking No"; // initial No text
-
     noBtn.addEventListener("click", () => {
         noClicks++;
 
         // First click special reaction
         if (noClicks === 1) {
             noBtn.innerText = "Jiskeko hau. No thichni hoina tya";
-            noBtn.style.width = "160px";
-            noBtn.style.height = "60px";
             return;
         }
 
-        // Random movement and shrinking effect
+        // Random movement
         const randomX = Math.floor(Math.random() * 200) - 100;
         const randomY = Math.floor(Math.random() * 80) - 40;
-        noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(${Math.max(0.6, 1 - noClicks * 0.05)})`;
 
-        // Next reaction
+        // Random shape changes for fun
+        const randomWidth = Math.floor(Math.random() * 120) + 100; // width between 100-220
+        const randomHeight = Math.floor(Math.random() * 60) + 50;  // height between 50-110
+        const randomRadius = Math.floor(Math.random() * 50) + 10;  // border-radius between 10-60px
+        const randomColor = `hsl(${Math.floor(Math.random()*360)}, 70%, 80%)`;
+
+        noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        noBtn.style.width = `${randomWidth}px`;
+        noBtn.style.height = `${randomHeight}px`;
+        noBtn.style.borderRadius = `${randomRadius}px`;
+        noBtn.style.backgroundColor = randomColor;
+
+        // Update reaction text
         noBtn.innerText = reactions[(noClicks-2) % reactions.length];
 
         // Yes button grows
