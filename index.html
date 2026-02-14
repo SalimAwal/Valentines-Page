@@ -21,6 +21,7 @@
         text-align: center;
         box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         width: 360px;
+        position: relative;
     }
 
     h1 { color: #ff4d6d; }
@@ -49,9 +50,9 @@
         color: black;
         position: absolute;
         font-size: 18px;
-        width: 220px;      /* very big initially */
-        height: 80px;      /* very big initially */
-        border-radius: 40px; /* round shape */
+        width: 220px;
+        height: 80px;
+        border-radius: 40px;
     }
 
     .popup {
@@ -61,6 +62,13 @@
         background: rgba(0,0,0,0.6);
         justify-content: center;
         align-items: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .popup.show {
+        display: flex;
+        opacity: 1;
     }
 
     .popup-content {
@@ -88,6 +96,10 @@
 </div>
 
 <div class="popup" id="popup">
+    <div class="popup-content" id="popupContent"></div>
+</div>
+
+<div class="popup" id="finalPopup">
     <div class="popup-content">
         <h2>You did it! 😍💘</h2>
         <p>You did it! Now you are stuck with me since always 😂. Happy Valentines my love ❤️, my princess 👸, my vunti 😍, my sigane 🤧, my kuchi puchi ku 🤗💘</p>
@@ -98,6 +110,8 @@
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
     const popup = document.getElementById("popup");
+    const popupContent = document.getElementById("popupContent");
+    const finalPopup = document.getElementById("finalPopup");
 
     let noClicks = 0;
 
@@ -105,15 +119,27 @@
         "Are you sure? 😏","Think again 😌","Don’t be shy 😜","That button is dangerous 😳",
         "Your finger slipped 😆","Wrong choice 😂","Plot twist: You like me ❤️","Nice try 😎",
         "Still no? 🥲","I can do this all day 😏","Resistance is useless 😈",
-        "Just say yes already 😭","Your heart says yes 💓","This button lies 🤥","Last chance 😜"
+        "Just say yes already 😭","Your heart says yes 💓","This button lies 🤥","Last chance 😜",
+        "Hmm… maybe? 😅","Oops, try again 😝","You can do it! 😜","Keep pressing No 😂",
+        "I see your hand shaking 😏","No? Really? 😆","Sneaky No! 😎","Try harder 😛",
+        "Haha! Almost! 😜","Is No fun? 🤪","Tickle me! 😂","You like saying No? 😏",
+        "Noooo! 😝","Come on… 😅","I expected that 😎","Are you tired yet? 😆",
+        "Almost gave up? 😏","Try pressing Yes 🤭","No is funny, right? 😛"
     ];
 
     noBtn.addEventListener("click", () => {
         noClicks++;
 
-        // First click special reaction
+        // First click special popup
         if (noClicks === 1) {
-            noBtn.innerText = "Jiskeko hau. No thichni hoina tya";
+            popupContent.innerText = "Jiskeko hau. Sachikai no thichexa. Aba nathich hai tya. Lets try this again.";
+            popup.classList.add("show");
+
+            // Hide popup after 5 seconds
+            setTimeout(() => {
+                popup.classList.remove("show");
+            }, 5000);
+
             return;
         }
 
@@ -122,9 +148,9 @@
         const randomY = Math.floor(Math.random() * 80) - 40;
 
         // Random shape changes for fun
-        const randomWidth = Math.floor(Math.random() * 120) + 100; // width between 100-220
-        const randomHeight = Math.floor(Math.random() * 60) + 50;  // height between 50-110
-        const randomRadius = Math.floor(Math.random() * 50) + 10;  // border-radius between 10-60px
+        const randomWidth = Math.floor(Math.random() * 120) + 100; // width 100-220
+        const randomHeight = Math.floor(Math.random() * 60) + 50;  // height 50-110
+        const randomRadius = Math.floor(Math.random() * 50) + 10;  // border-radius 10-60
         const randomColor = `hsl(${Math.floor(Math.random()*360)}, 70%, 80%)`;
 
         noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
@@ -141,7 +167,7 @@
     });
 
     yesBtn.addEventListener("click", () => {
-        popup.style.display = "flex";
+        finalPopup.style.display = "flex";
     });
 </script>
 
